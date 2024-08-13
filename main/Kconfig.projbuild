@@ -1,0 +1,119 @@
+menu "GARAGE Configuration"
+
+    
+    orsource "$IDF_PATH/examples/common_components/env_caps/$IDF_TARGET/Kconfig.env_caps"
+
+    config GARAGE_GPIO_REED_0
+        int "GPIO input pin 0"
+        range ENV_GPIO_RANGE_MIN ENV_GPIO_IN_RANGE_MAX
+        default 4
+        help
+            GPIO pin number to be used as GPIO_REED_0.
+
+    config GARAGE_GPIO_REED_1
+        int "GPIO input pin 1"
+        range ENV_GPIO_RANGE_MIN ENV_GPIO_IN_RANGE_MAX
+        default 5
+        help
+            GPIO pin number to be used as GPIO_REED_1.
+
+    config GARAGE_GPIO_DOOR_SIGNAL_0
+        int "GPIO output pin 0"
+        range ENV_GPIO_RANGE_MIN ENV_GPIO_IN_RANGE_MAX
+        default 6
+        help
+            GPIO pin number to be used as GPIO_DOOR_SIGNAL_0.
+
+    config GARAGE_GPIO_DOOR_SIGNAL_1
+        int "GPIO output pin 1"
+        range ENV_GPIO_RANGE_MIN ENV_GPIO_IN_RANGE_MAX
+        default 7
+        help
+            GPIO pin number to be used as GPIO_DOOR_SIGNAL_1.
+        
+    config GARAGE_MDNS_HOST_NAME
+        string "mDNS Host Name"
+        default "esp-home"
+        help
+            Specify the domain name used in the mDNS service.
+            Note that webpage also take it as a part of URL where it will send GET/POST requests to.
+
+    choice GARAGE_WEB_DEPLOY_MODE
+        prompt "Website deploy mode"
+        default GARAGE_WEB_DEPLOY_SEMIHOST
+        help
+            Select website deploy mode.
+            You can deploy website to host, and ESP32 will retrieve them in a semihost way (JTAG is needed).
+            You can deploy website to SD card or SPI flash, and ESP32 will retrieve them via SDIO/SPI interface.
+            Detailed operation steps are listed in the example README file.
+        config GARAGE_WEB_DEPLOY_SEMIHOST
+            bool "Deploy website to host (JTAG is needed)"
+            help
+                Deploy website to host.
+                It is recommended to choose this mode during developing.
+        config GARAGE_WEB_DEPLOY_SD
+            depends on IDF_TARGET_ESP32
+            bool "Deploy website to SD card"
+            help
+                Deploy website to SD card.
+                Choose this production mode if the size of website is too large (bigger than 2MB).
+        config GARAGE_WEB_DEPLOY_SF
+            bool "Deploy website to SPI Nor Flash"
+            help
+                Deploy website to SPI Nor Flash.
+                Choose this production mode if the size of website is small (less than 2MB).
+    endchoice
+
+    if GARAGE_WEB_DEPLOY_SEMIHOST
+        config GARAGE_HOST_PATH_TO_MOUNT
+            string "Host path to mount (e.g. absolute path to web dist directory)"
+            default "PATH-TO-WEB-DIST_DIR"
+            help
+                When using semihost in ESP32, you should specify the host path which will be mounted to VFS.
+                Note that only absolute path is acceptable.
+    endif
+
+    config GARAGE_WEB_MOUNT_POINT
+        string "Website mount point in VFS"
+        default "/www"
+        help
+            Specify the mount point in VFS.
+
+    config GARAGE_WIFI_STATION_NAME
+        string "Name of wifi station when in AP mode"
+        default "garage-esp32-controller"
+        help
+            This is the name of the device that will show up in wifi scans.
+
+    choice GARAGE_WIFI_SCAN_METHOD
+        prompt "WiFi Scan Method"
+        default GARAGE_WIFI_SCAN_METHOD_ALL_CHANNEL
+        help
+            WiFi scan method:
+
+            If "Fast" is selected, scan will end after find SSID match AP.
+
+            If "All Channel" is selected, scan will end after scan all the channel.
+
+        config GARAGE_WIFI_SCAN_METHOD_FAST
+            bool "Fast"
+        config GARAGE_WIFI_SCAN_METHOD_ALL_CHANNEL
+            bool "All Channel"
+    endchoice
+
+    choice GARAGE_WIFI_CONNECT_AP_SORT_METHOD
+        prompt "WiFi Connect AP Sort Method"
+        default GARAGE_WIFI_CONNECT_AP_BY_SIGNAL
+        help
+            WiFi connect AP sort method:
+
+            If "Signal" is selected, Sort matched APs in scan list by RSSI.
+
+            If "Security" is selected, Sort matched APs in scan list by security mode.
+
+        config GARAGE_WIFI_CONNECT_AP_BY_SIGNAL
+            bool "Signal"
+        config GARAGE_WIFI_CONNECT_AP_BY_SECURITY
+            bool "Security"
+    endchoice
+endmenu

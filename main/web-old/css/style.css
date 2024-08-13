@@ -1,0 +1,73 @@
+.ap-selected {
+    background-color: #eeeeee;
+}
+html, body {
+    margin: 0;
+    min-height: 100%;
+}
+.content {
+    max-width: 900px;
+}
+button {
+    width: 112px;
+}
+.mui-container-fluid {
+    max-width: 500px;
+}
+.mui-textfield>label{
+    overflow: hidden;
+}
+.table-container {
+    height: 200px;
+    overflow-y: auto;
+}
+
+#wifi-aplist {
+    border-collapse: collapse;
+}
+#wifi-aplist tbody {
+    text-align: center
+}
+
+.col-ssid {
+    text-align: left;
+}
+.col-auth {
+    width: 10%;
+    text-align: right;
+}
+.col-strength {
+    width: 10%;
+    text-align: right;
+}
+
+.modalWait {
+    width: 80%;
+    margin:0 auto;
+    display:table;
+    position: absolute;
+    left: 0;
+    right:0;
+    top: 30%; 
+    text-align: center;
+}
+
+.modalMain {
+    width: 80%;
+    max-width: 400px;
+    height: 150px;
+    background-color: #fff;
+    margin:0 auto;
+    display:table;
+    position: absolute;
+    left: 0;
+    right:0;
+    top: 40%; 
+    text-align: center;
+}
+
+.modalMsg {
+    margin-top: 50px;
+    font-size: 18pt;
+    font-weight: bold;
+}
